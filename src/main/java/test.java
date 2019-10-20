@@ -1,3 +1,4 @@
+import cn.hutool.core.util.StrUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -44,8 +45,14 @@ public class test {
         for (int i = 0; i < rows; i++) {
             // 获取第i行数据
             Row row = sheet.getRow(i);
+            if (row == null) {
+                continue;
+            }
             // 获取第0格数据(第二列就填1)
             String content = row.getCell(numberOfCell).toString();
+            if (StrUtil.isEmpty(content)) {
+                continue;
+            }
             //在下一列写结果
             Cell cell = row.createCell(numberOfCell + 1);
             if (source.contains(content)) {
