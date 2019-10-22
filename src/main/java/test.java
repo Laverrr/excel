@@ -20,16 +20,24 @@ public class test {
     public static void main(String[] args) throws IOException {
         //文件地址
         String path = "C:\\Users\\L\\Desktop\\test3.xlsx";
+        //txt文件路径（如果想读取网页,设置 txtPath = null）
+        String txtPath = "C:\\Users\\L\\Desktop\\test.txt";
         //目标url
         String url = "https://zh.aiavitality.com.hk/vmp-hk/";
+        String source;
+        if (StrUtil.isNotBlank(txtPath)) {
+            //读取txt文字
+            source = TxtUtil.readTxt(txtPath);
+        } else {
+            //读取网站文字
+            Document document = Jsoup.connect(url).get();
+            Elements allElements = document.getAllElements();
+            source = allElements.toString();
+        }
         //读取第几个sheet
         int numberOfSheet = 0;
         //读取第几列（默认第二页，cell = 1 为第二列）
         int numberOfCell = 1;
-        //读取网站文字
-        Document document = Jsoup.connect(url).get();
-        Elements allElements = document.getAllElements();
-        String source = allElements.toString();
         //1.读取Excel文档对象
         Workbook wb;
         File file = new File(path);
@@ -50,7 +58,7 @@ public class test {
             }
             // 获取第0格数据(第二列就填1)
             String content = row.getCell(numberOfCell).toString();
-            if (StrUtil.isEmpty(content)) {
+            if (StrUtil.isBlank(content)) {
                 continue;
             }
             //在下一列写结果
